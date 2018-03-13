@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "347520988155",
+    "firebase_url": "https://cs125-b55e1.firebaseio.com",
+    "project_id": "cs125-b55e1",
+    "storage_bucket": "cs125-b55e1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:347520988155:android:d5ec02686d3eff5c",
+        "android_client_info": {
+          "package_name": "com.clarifai.android.starter.api.v2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "347520988155-mg8bceooplbbake92irg6a5s22q4iq6h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCD2irwP-6V4WFfL-Wv3cQEaDjWIsnrpyQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
