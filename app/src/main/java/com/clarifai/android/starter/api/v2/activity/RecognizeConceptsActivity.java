@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -25,6 +26,12 @@ import com.clarifai.android.starter.api.v2.App;
 import com.clarifai.android.starter.api.v2.ClarifaiUtil;
 import com.clarifai.android.starter.api.v2.R;
 import com.clarifai.android.starter.api.v2.adapter.RecognizeConceptsAdapter;
+import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,7 +40,15 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 public final class RecognizeConceptsActivity extends BaseActivity {
 
+  public static final int RC_SIGN_IN = 1;
   public static final int PICK_IMAGE = 100;
+
+  private FirebaseDatabase mFirebaseDatabase;
+  private DatabaseReference mMessagesDatabaseRefrence;
+  private ChildEventListener mChildEventListener;
+  private FirebaseAuth mFirebaseAuth;
+  private FirebaseAuth.AuthStateListener mAuthStateListener;
+
 
   // the list of results that were returned from the API
   @BindView(R.id.resultsList) RecyclerView resultsList;
@@ -51,7 +66,28 @@ public final class RecognizeConceptsActivity extends BaseActivity {
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    mFirebaseDatabase = FirebaseDatabase.getInstance();
+    mFirebaseAuth = FirebaseAuth.getInstance();
 
+
+
+    mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+      @Override
+      public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if(user != null){
+          //onSignedInInitialize(user.getDisplayName());
+          String welcome = "Welcome to Calomiter, " + user.getDisplayName();
+          Toast.makeText(RecognizeConceptsActivity.this, welcome, Toast.LENGTH_SHORT).show();
+        }
+        else {
+          //onSignedOutCleanup();
+          startActivityForResult(
+                  AuthUI.getInstance().createSignInIntentBuilder().build(),
+                  RC_SIGN_IN);
+        }
+      }
+    };
   }
 
   @Override protected void onStart() {
@@ -136,4 +172,14 @@ public final class RecognizeConceptsActivity extends BaseActivity {
     });
   }
 
+    protected void onPause()
+    {
+        super.onPause();
+        mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
+    }
+    protected void onResume()
+    {
+        super.onResume();
+        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
+    }
 }
